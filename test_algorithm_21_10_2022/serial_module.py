@@ -1,4 +1,5 @@
 #Documentation: https://pyserial.readthedocs.io/en/latest/pyserial_api.html
+#linux allow read and write on: sudo chmod a+rw /dev/ttyACM3
 
 import time
 import serial
@@ -9,7 +10,7 @@ __PORT_NAME = None
 __SERIAL_OBJECT = None
 __ARDUINO_BOOT_TIME_SECONDS = 3
 
-
+#region -> helper functions
 def __get_available_serial_ports():
         #returns all avilable serial ports as string list
         port_objects = list(list_ports.comports())
@@ -37,7 +38,6 @@ def __open_port(__SERIAL_OBJECT):
                         __SERIAL_OBJECT.open()
         else:
                 print("No __SERIAL_OBJECT to open")
-
 def __write_to_port_and_get_response(str_data_to_write, wait_response_seconds):
         #Writes data to the serial port       
         __SERIAL_OBJECT.write(str_data_to_write.encode("utf-8"))
@@ -48,18 +48,16 @@ def __write_to_port_and_get_response(str_data_to_write, wait_response_seconds):
         buffer_str = buffer_str.replace("\r", "")
         buffer_str = buffer_str.replace("\n", "")
         if(buffer_str == ""):
-                buffer = None
+                buffer_str = None
         return(buffer_str)
 
+#region -> public functions
 def close_port():
         #Closes the serial port
         if(isinstance(__SERIAL_OBJECT, serial.Serial)):
                 __SERIAL_OBJECT.close()
         else:
                 print("No __SERIAL_OBJECT to close")
-
-
-
 def write_to_port_and_get_response(str_data_to_write, wait_response_seconds):
         global __PORT_NAME
         global __SERIAL_OBJECT
@@ -90,4 +88,5 @@ def write_to_port_and_get_response(str_data_to_write, wait_response_seconds):
         except Exception as e:
                 __SERIAL_OBJECT = None
                 print("execute_and_get_reply() -> Error occured while executing command: " + str(e))
+                time.sleep(0.5)
 
