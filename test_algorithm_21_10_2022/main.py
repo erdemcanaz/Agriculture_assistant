@@ -66,8 +66,6 @@ def measurement_block():
 setup_block()
 while True:
         
-
-        #take measurements of Inv_BESS_Current_Ref, Dri_DC_voltage, Dri_Frequency, Dri_Power, Inv_PV_Power, Inv_Load_Power, Inv_BESS_Power, Inv_BESS_Voltage, Inv_BESS_Current
         measurement_block()
         
         #TODO: main algorithm
