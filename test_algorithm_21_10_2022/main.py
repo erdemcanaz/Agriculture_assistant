@@ -3,7 +3,9 @@ import time
 from modbus_command_module import execute_command ,average_executed_command ,print_latest_replies
 import driver
 
-NUMBER_OF_MAX_RETRIES = 3
+import serial_module
+
+NUMBER_OF_MAX_RETRIES = 10
 WAIT_RESPONSE_SECONDS = 1.5
 
 DESIRED_DRIVER_FREQUENCY_HZ = 0
@@ -22,10 +24,13 @@ Inv_BESS_Current = None
 
 def setup_block():
         global Inv_BESS_Current_Ref
+        Inv_BESS_Current_Ref = 50
+        execute_command("inverter_set_Inv_BESS_Current_Ref", Inv_BESS_Current_Ref, WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, True)
+        
         execute_command("inverter_read_Inv_BESS_Voltage", None , WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, True)
 
         execute_command("driver_stop", None, WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, True)
-        time.sleep(10)
+        time.sleep(1)
         execute_command("driver_enable_PV_mode", None, WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, True)  
         execute_command("driver_enable_voltage_reference_control_mode", None, WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, True)
         execute_command("driver_enable_pv_input", None, WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, True)    
@@ -38,12 +43,10 @@ def setup_block():
         execute_command("driver_set_rated_speed_2870rpm", None, WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, True)      
         execute_command("driver_set_rated_voltage_220V", None, WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, True)    
         execute_command("driver_set_rated_current_13_8A", None, WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, True)   
-        execute_command("driver_set_the_maximum_frequency_50Hz", None, WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, True)       
         execute_command("driver_set_upper_limit_frequency_50Hz", None, WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, True)    
+        execute_command("driver_set_the_maximum_frequency_50Hz", None, WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, True)       
         execute_command("driver_set_lower_limit_frequency_0Hz", None, WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, True)
 
-        Inv_BESS_Current_Ref = 50
-        execute_command("inverter_set_Inv_BESS_Current_Ref", Inv_BESS_Current_Ref, WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, True)
 def measurement_block():
         global Dri_DC_voltage
         global Dri_Frequency
@@ -68,9 +71,15 @@ def measurement_block():
         Inv_BESS_Current = Inv_BESS_Power / Inv_BESS_Voltage
 
 
-#setup_block()
+setup_block()
 while True:
-        execute_command("inverter_read_Inv_BESS_Voltage", None , WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, True)
+        # rslt = serial_module.write_to_port_and_get_response("15,6,32,0,0,5\n",WAIT_RESPONSE_SECONDS)
+        # print(rslt)
+        # rslt_2 = serial_module.write_to_port_and_get_response("16,04,00,17,00,01\n",WAIT_RESPONSE_SECONDS)
+        # print(rslt_2)
+
+        # execute_command("inverter_read_Inv_BESS_Voltage", None , WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, True)
+       
         #measurement_block()
         
         #TODO: main algorithm

@@ -22,7 +22,7 @@ write_commands = {
     "driver_set_rated_voltage_220V": "15,6,2,4,0,220\n",
     "driver_set_rated_current_13_8A":"15,6,2,5,0,138\n",
     "driver_set_the_maximum_frequency_50Hz":"15,6,0,3,19,136\n",
-    "driver_set_upper_limit_frequency_50Hz":"15,6,0,4,19,136\n",
+    "driver_set_upper_limit_frequency_50Hz":"15,6,0,4,19,134\n",
     "driver_set_lower_limit_frequency_0Hz":"15,6,0,5,0,0\n",
 
     "driver_run": "15,6,32,0,0,1\n",
@@ -60,6 +60,7 @@ def execute_command(command=None, value=None, wait_response_seconds=1, number_of
                 print(f"value = {value}")
 
         if command in write_commands:
+            command = write_commands[command]
             sig_byte = None
             lst_byte = None
             if isinstance(value, int):
@@ -76,8 +77,9 @@ def execute_command(command=None, value=None, wait_response_seconds=1, number_of
                 command_to_execute = command.replace("<sig_byte>", str(sig_byte))
                 command_to_execute = command_to_execute.replace(
                     "<lst_byte>", str(lst_byte))
+                command = command_to_execute
 
-            response = write_to_port_and_get_response(write_commands[command], wait_response_seconds)
+            response = write_to_port_and_get_response(command, wait_response_seconds)
 
             #save response to latest_replies
             if (isinstance(response, str)):

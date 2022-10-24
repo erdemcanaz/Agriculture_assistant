@@ -27,7 +27,7 @@ def __set_serial_object(port_name):
                 bytesize = 8, 
                 parity = "N", 
                 stopbits = 1, 
-                timeout=2
+                timeout=3
         )
 def __open_port(__SERIAL_OBJECT):
         #Opens the serial port
@@ -43,7 +43,7 @@ def __write_to_port_and_get_response(str_data_to_write, wait_response_seconds):
         while __SERIAL_OBJECT.in_waiting > 0:
                 __SERIAL_OBJECT.read()
         #Writes data to the serial port       
-        __SERIAL_OBJECT.write(str_data_to_write.encode("utf-8"))
+        __SERIAL_OBJECT.write(str_data_to_write.encode("utf-8"))        
         time.sleep(wait_response_seconds)
         buffer_str = ""
         while __SERIAL_OBJECT.in_waiting > 0:
@@ -67,7 +67,7 @@ def write_to_port_and_get_response(str_data_to_write, wait_response_seconds):
         global __ARDUINO_BOOT_TIME_SECONDS
         try:
                 if(isinstance(__SERIAL_OBJECT, serial.Serial) and __SERIAL_OBJECT.is_open):  
-                        __SERIAL_OBJECT.flushInput()                      
+                        #__SERIAL_OBJECT.flushInput()                 
                         return __write_to_port_and_get_response(str_data_to_write, wait_response_seconds)
 
                 elif(isinstance(__SERIAL_OBJECT, serial.Serial) and not __SERIAL_OBJECT.is_open):
