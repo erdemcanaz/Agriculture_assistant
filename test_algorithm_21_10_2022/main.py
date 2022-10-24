@@ -1,8 +1,10 @@
+import time
+
 from modbus_command_module import execute_command ,average_executed_command ,print_latest_replies
 import driver
 
-NUMBER_OF_MAX_RETRIES = 5
-WAIT_RESPONSE_SECONDS = 1
+NUMBER_OF_MAX_RETRIES = 3
+WAIT_RESPONSE_SECONDS = 1.5
 
 DESIRED_DRIVER_FREQUENCY_HZ = 0
 
@@ -20,7 +22,10 @@ Inv_BESS_Current = None
 
 def setup_block():
         global Inv_BESS_Current_Ref
+        execute_command("inverter_read_Inv_BESS_Voltage", None , WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, True)
+
         execute_command("driver_stop", None, WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, True)
+        time.sleep(10)
         execute_command("driver_enable_PV_mode", None, WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, True)  
         execute_command("driver_enable_voltage_reference_control_mode", None, WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, True)
         execute_command("driver_enable_pv_input", None, WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, True)    
@@ -63,10 +68,10 @@ def measurement_block():
         Inv_BESS_Current = Inv_BESS_Power / Inv_BESS_Voltage
 
 
-setup_block()
+#setup_block()
 while True:
-        
-        measurement_block()
+        execute_command("inverter_read_Inv_BESS_Voltage", None , WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, True)
+        #measurement_block()
         
         #TODO: main algorithm
 

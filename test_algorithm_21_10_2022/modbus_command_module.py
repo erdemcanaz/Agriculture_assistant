@@ -4,7 +4,7 @@ from serial_module import write_to_port_and_get_response
 
 IS_PRINT_COMMAND_EXECUTED = True
 IS_PRINT_NUMBER_OF_RETRIES = True
-IS_PRINT_VALUE = True
+IS_PRINT_VALUE = False
 IS_PRINT_RESPONSE = True
 
 write_commands = {    

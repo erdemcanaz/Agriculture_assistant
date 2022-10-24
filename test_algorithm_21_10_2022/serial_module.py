@@ -39,6 +39,9 @@ def __open_port(__SERIAL_OBJECT):
         else:
                 print("No __SERIAL_OBJECT to open")
 def __write_to_port_and_get_response(str_data_to_write, wait_response_seconds):
+        #clear buffer
+        while __SERIAL_OBJECT.in_waiting > 0:
+                __SERIAL_OBJECT.read()
         #Writes data to the serial port       
         __SERIAL_OBJECT.write(str_data_to_write.encode("utf-8"))
         time.sleep(wait_response_seconds)
