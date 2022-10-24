@@ -77,7 +77,7 @@ def execute_command(command=None, value=None, wait_response_seconds=1, number_of
                 command_to_execute = command_to_execute.replace(
                     "<lst_byte>", str(lst_byte))
 
-            response = write_to_port_and_get_response(command, wait_response_seconds)
+            response = write_to_port_and_get_response(write_commands[command], wait_response_seconds)
 
             #save response to latest_replies
             if (isinstance(response, str)):
@@ -99,7 +99,7 @@ def execute_command(command=None, value=None, wait_response_seconds=1, number_of
             
         elif (command in read_commands):
             response = write_to_port_and_get_response(
-                command, wait_response_seconds)
+                read_commands[command], wait_response_seconds)
             
             #save response to latest_replies
             if (isinstance(response, str)):

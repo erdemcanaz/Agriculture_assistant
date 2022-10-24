@@ -2,7 +2,7 @@ from modbus_command_module import execute_command ,average_executed_command ,pri
 import driver
 
 NUMBER_OF_MAX_RETRIES = 5
-WAIT_RESPONSE_SECONDS = 0.1
+WAIT_RESPONSE_SECONDS = 1
 
 DESIRED_DRIVER_FREQUENCY_HZ = 0
 
@@ -70,8 +70,8 @@ while True:
         
         #TODO: main algorithm
 
-        driver.drive_motor_at_frequency(DESIRED_DRIVER_FREQUENCY_HZ)
-        execute_command("inverter_set_Inv_BESS_Current_Ref", Inv_BESS_Current_Ref, WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, True)
+        #driver.drive_motor_at_frequency(DESIRED_DRIVER_FREQUENCY_HZ)
+        #execute_command("inverter_set_Inv_BESS_Current_Ref", Inv_BESS_Current_Ref, WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, True)
 
         pass
 
