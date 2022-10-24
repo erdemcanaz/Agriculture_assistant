@@ -3,7 +3,7 @@ import datetime
 from serial_module import write_to_port_and_get_response
 
 IS_PRINT_COMMAND_EXECUTED = True
-IS_PRINT_NUMBER_OF_RETRIES = True
+IS_PRINT_NUMBER_OF_RETRIES = False
 IS_PRINT_VALUE = False
 IS_PRINT_RESPONSE = True
 
@@ -16,7 +16,7 @@ write_commands = {
     "driver_select_communication_running_command_channel":"15,6,0,1,0,2\n",
     "driver_select_deceleration_to_stop":"15,6,1,8,0,0\n",
     "driver_select_motor_type_as_asynchronous" : "15,6,2,0,0,0\n",
-    "driver_set_rated_power_2_2kW": "15,6,2,1,8,152\n",
+    "driver_set_rated_power_2_2kW": "15,6,2,1,0,22\n",
     "driver_set_rated_frequency_50Hz": "15,6,2,2,19,136\n",
     "driver_set_rated_speed_2870rpm": "15,6,2,3,11,54\n",
     "driver_set_rated_voltage_220V": "15,6,2,4,0,220\n",
@@ -60,7 +60,7 @@ def execute_command(command=None, value=None, wait_response_seconds=1, number_of
                 print(f"value = {value}")
 
         if command in write_commands:
-            command = write_commands[command]
+            command_to_execute = write_commands[command]
             sig_byte = None
             lst_byte = None
             if isinstance(value, int):
@@ -74,12 +74,11 @@ def execute_command(command=None, value=None, wait_response_seconds=1, number_of
                 sig_byte = value >> 8
                 lst_byte = value & 0xFF
 
-                command_to_execute = command.replace("<sig_byte>", str(sig_byte))
+                command_to_execute = command_to_execute.replace("<sig_byte>", str(sig_byte))
                 command_to_execute = command_to_execute.replace(
                     "<lst_byte>", str(lst_byte))
-                command = command_to_execute
-
-            response = write_to_port_and_get_response(command, wait_response_seconds)
+            
+            response = write_to_port_and_get_response(command_to_execute, wait_response_seconds)
 
             #save response to latest_replies
             if (isinstance(response, str)):
