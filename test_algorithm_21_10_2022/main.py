@@ -144,7 +144,7 @@ def algorithm_block_2():
         global Inv_BESS_Current_Ref
 
         if(Dri_Frequency > 49.7):
-                if(abs(Inv_BESS_Current - Inv_BESS_Current_Ref) < 1):
+                if(abs(Inv_BESS_Current - Inv_BESS_Current_Ref) < 2):
                         Inv_BESS_Current_Ref= min( Inv_BESS_Current_Ref +2 , 50)
 
 
@@ -158,7 +158,7 @@ def algorithm_block_3():
 
         if(Dri_Frequency == 0):
                 Dri_Frequency_Ref = 0
-                if(abs(Inv_BESS_Current - Inv_BESS_Current_Ref) < 1):
+                if(abs(Inv_BESS_Current - Inv_BESS_Current_Ref) < 2):
                         Inv_BESS_Current_Ref= min( Inv_BESS_Current_Ref +2 , 50)
                         
 
