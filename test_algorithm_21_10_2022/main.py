@@ -44,7 +44,7 @@ def setup_block():
         execute_command("driver_set_the_maximum_frequency_50Hz", None, WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, True)       
         execute_command("driver_set_lower_limit_frequency_0Hz", None, WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, True)
 
-        Inv_BESS_Current_Ref = 50
+        Inv_BESS_Current_Ref = 5
         execute_command("inverter_set_Inv_BESS_Current_Ref", Inv_BESS_Current_Ref, WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, True)
         
 def measurement_block():
@@ -83,9 +83,11 @@ def measurement_block():
 setup_block()
 while True:
 
+        # Inv_BESS_Current_Ref = 5
+        # execute_command("inverter_set_Inv_BESS_Current_Ref", Inv_BESS_Current_Ref, WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, True)
+
+        driver.drive_motor_at_frequency(50)
         #measurement_block()
-        
-        driver.drive_motor_at_frequency(30)
        
         
         #driver.drive_motor_at_frequency(DESIRED_DRIVER_FREQUENCY_HZ)
