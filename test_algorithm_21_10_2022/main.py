@@ -27,23 +27,23 @@ def setup_block():
         global Inv_BESS_Current_Ref
         execute_command("inverter_read_Inv_BESS_Voltage", None , WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, True)
 
-        # execute_command("driver_stop", None, WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, True)
-        # time.sleep(5)
-        # execute_command("driver_enable_PV_mode", None, WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, True)  
-        # execute_command("driver_enable_voltage_reference_control_mode", None, WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, True)
-        # execute_command("driver_enable_pv_input", None, WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, True)    
-        # execute_command("driver_select_SVPWM_control", None, WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, True)
-        # execute_command("driver_select_communication_running_command_channel", None, WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, True)    
-        # execute_command("driver_select_deceleration_to_stop", None, WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, True)     
-        # execute_command("driver_select_motor_type_as_asynchronous", None, WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, True)      
-        # execute_command("driver_set_rated_power_2_2kW", None, WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, True)              
-        # execute_command("driver_set_rated_frequency_50Hz", None, WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, True)       
-        # execute_command("driver_set_rated_speed_2870rpm", None, WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, True)      
-        # execute_command("driver_set_rated_voltage_220V", None, WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, True)    
-        # execute_command("driver_set_rated_current_13_8A", None, WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, True)   
-        # execute_command("driver_set_upper_limit_frequency_50Hz", None, WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, True)    
-        # execute_command("driver_set_the_maximum_frequency_50Hz", None, WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, True)       
-        # execute_command("driver_set_lower_limit_frequency_0Hz", None, WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, True)
+        execute_command("driver_stop", None, WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, True)
+        time.sleep(10)
+        execute_command("driver_enable_PV_mode", None, WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, True)  
+        execute_command("driver_enable_voltage_reference_control_mode", None, WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, True)
+        execute_command("driver_enable_pv_input", None, WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, True)    
+        execute_command("driver_select_SVPWM_control", None, WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, True)
+        execute_command("driver_select_communication_running_command_channel", None, WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, True)    
+        execute_command("driver_select_deceleration_to_stop", None, WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, True)     
+        execute_command("driver_select_motor_type_as_asynchronous", None, WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, True)      
+        execute_command("driver_set_rated_power_2_2kW", None, WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, True)              
+        execute_command("driver_set_rated_frequency_50Hz", None, WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, True)       
+        execute_command("driver_set_rated_speed_2870rpm", None, WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, True)      
+        execute_command("driver_set_rated_voltage_220V", None, WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, True)    
+        execute_command("driver_set_rated_current_13_8A", None, WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, True)   
+        execute_command("driver_set_upper_limit_frequency_50Hz", None, WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, True)    
+        execute_command("driver_set_the_maximum_frequency_50Hz", None, WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, True)       
+        execute_command("driver_set_lower_limit_frequency_0Hz", None, WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, True)
 
         Inv_BESS_Current_Ref = 50
         execute_command("inverter_set_Inv_BESS_Current_Ref", Inv_BESS_Current_Ref, WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, True)
@@ -101,7 +101,7 @@ def algorithm_block_1():
         global Dri_Power
         global Inv_BESS_Voltage
     
-        DEFINED_ALGORITHM_PERIOD_SECONDS = 120
+        DEFINED_ALGORITHM_PERIOD_SECONDS = 300
 
         if PREVIOUS_ALGORITHM_ENTER_TIME == None:
                 print("TIME LEFT: 0 seconds")

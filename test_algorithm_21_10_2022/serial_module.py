@@ -91,5 +91,4 @@ def write_to_port_and_get_response(str_data_to_write, wait_response_seconds):
         except Exception as e:
                 __SERIAL_OBJECT = None
                 print("execute_and_get_reply() -> Error occured while executing command: " + str(e))
-                time.sleep(0.5)
 

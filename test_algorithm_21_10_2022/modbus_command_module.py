@@ -99,6 +99,7 @@ def execute_command(command=None, value=None, wait_response_seconds=1, number_of
                 return response
             else:
                 number_of_retries+=1
+                time.sleep(7.5)
             
         elif (command in read_commands):
             response = write_to_port_and_get_response(
@@ -120,6 +121,7 @@ def execute_command(command=None, value=None, wait_response_seconds=1, number_of
                 return response
             else:
                 number_of_retries+=1
+                time.sleep(7.5)
 
         else:
             raise Exception(f"command= {command} is not known")
