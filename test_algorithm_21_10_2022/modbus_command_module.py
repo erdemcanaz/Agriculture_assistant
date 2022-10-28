@@ -48,7 +48,8 @@ read_commands = {
 latest_replies = {}
 
 def execute_command(command=None, value=None, wait_response_seconds=1, number_of_retries_allowed=1, raise_exception=True):
-    
+    if value != None:
+        value = int(value)    
 
     number_of_retries = 0
     while number_of_retries < number_of_retries_allowed:

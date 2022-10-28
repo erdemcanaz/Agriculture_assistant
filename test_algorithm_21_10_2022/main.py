@@ -8,7 +8,7 @@ import serial_module
 NUMBER_OF_MAX_RETRIES = 5
 WAIT_RESPONSE_SECONDS = 2
 
-DESIRED_DRIVER_FREQUENCY_HZ = 0
+Dri_Frequency_Ref = 0
 
 
 Inv_BESS_Current_Ref = None
@@ -44,10 +44,10 @@ def setup_block():
         execute_command("driver_set_the_maximum_frequency_50Hz", None, WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, True)       
         execute_command("driver_set_lower_limit_frequency_0Hz", None, WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, True)
 
-        Inv_BESS_Current_Ref = 5
+        Inv_BESS_Current_Ref = 50
         execute_command("inverter_set_Inv_BESS_Current_Ref", Inv_BESS_Current_Ref, WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, True)
         
-def measurement_block():
+def measurement_block(start_time_time_seconds, min_duration_seconds):
         global Dri_DC_voltage
         global Dri_Frequency
         global Dri_Power
@@ -57,7 +57,7 @@ def measurement_block():
         global Inv_BESS_Voltage
         global Inv_BESS_Current
 
-        NUMBER_OF_DATA_POINTS = 2
+        NUMBER_OF_DATA_POINTS = 1
         
         Dri_DC_voltage = float(average_executed_command(NUMBER_OF_DATA_POINTS, "driver_read_Dri_DC_voltage", None , WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES))/10
         Dri_Frequency = float(average_executed_command(NUMBER_OF_DATA_POINTS, "driver_read_Dri_Frequency", None , WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES))/100
@@ -79,20 +79,75 @@ def measurement_block():
         print( "Inv_BESS_Voltage: " + str(Inv_BESS_Voltage) + "V")
         print( "Inv_BESS_Current: " + str(Inv_BESS_Current) + "A")
 
+        while True:
+                if time.time()-start_time_time_seconds > min_duration_seconds:
+                        break
+
+PREVIOUS_ALGORITHM_ENTER_TIME = None
+def algorithm_block_1():
+        global PREVIOUS_ALGORITHM_ENTER_TIME
+        global Dri_Frequency_Ref
+        global Inv_BESS_Current_Ref
+        global Inv_BESS_Power
+        global Dri_Frequency
+        global Dri_Power
+        global Inv_BESS_Voltage
+    
+        DEFINED_ALGORITHM_PERIOD_SECONDS = 600 
+        
+        if PREVIOUS_ALGORITHM_ENTER_TIME == None or time.time()-PREVIOUS_ALGORITHM_ENTER_TIME > DEFINED_ALGORITHM_PERIOD_SECONDS:
+                PREVIOUS_ALGORITHM_ENTER_TIME = time.time()
+                #below code exucutes every 10 minutes
+                if Inv_BESS_Power > 100:  
+                        if(Dri_Frequency == 0 and (0.7 * Inv_BESS_Power) >1250):
+                                if (0.7*Inv_BESS_Power)  <2200:
+                                        Inv_BESS_Current_Ref = (0.3 * Inv_BESS_Power)/Inv_BESS_Voltage
+                                else:
+                                        Inv_BESS_Current_Ref = (Inv_BESS_Power - 2200)/Inv_BESS_Voltage
+
+                
+                                Dri_Frequency_Ref = 50
+                        
+                        elif(Dri_Frequency>10 and Dri_Frequency <50):
+                                if 0.7*(Inv_BESS_Power+ Dri_Power)  <2200:
+                                        Inv_BESS_Current_Ref = 0.3* (Inv_BESS_Power + Dri_Power) / Inv_BESS_Voltage
+
+                                else:
+                                        Inv_BESS_Current_Ref = (Inv_BESS_Power + Dri_Power - 2200)/Inv_BESS_Voltage
+                                
+                        
+                elif(Inv_BESS_Power> -100 and Inv_BESS_Power < 100):
+                        Dri_Frequency_Ref = 50
+
+                elif(Inv_BESS_Power < -100):
+                        Dri_Frequency_Ref = 0
+
+
+
+
+
+                
+
+
+def driver_block(frequency):
+        driver.drive_motor_at_frequency(frequency)
+
+def BESS_block():
+        global Inv_BESS_Current_Ref
+        Inv_BESS_Current_Ref = min(Inv_BESS_Current_Ref, 50)
+        Inv_BESS_Current_Ref = max(Inv_BESS_Current_Ref, 5)
+        execute_command("inverter_set_Inv_BESS_Current_Ref", Inv_BESS_Current_Ref, WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, True)
+
+#===================================================================================================
 
 setup_block()
 while True:
-
-        # Inv_BESS_Current_Ref = 5
-        # execute_command("inverter_set_Inv_BESS_Current_Ref", Inv_BESS_Current_Ref, WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, True)
-
-        driver.drive_motor_at_frequency(50)
-        #measurement_block()
-       
+ 
+        measurement_block(time.time(), 15)       
         
-        #driver.drive_motor_at_frequency(DESIRED_DRIVER_FREQUENCY_HZ)
-        #execute_command("inverter_set_Inv_BESS_Current_Ref", Inv_BESS_Current_Ref, WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, True)
-
+        BESS_block()
+        driver_block(0)
+        
         pass
 
 
