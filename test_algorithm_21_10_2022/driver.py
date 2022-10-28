@@ -22,15 +22,16 @@ def drive_motor_at_frequency(desired_frequency):
             print("The frequency is already at the maximum. So I will not change it")
             return None
 
-    abs_delta_voltage = 6 if freq_initial < 12 else 4 
-        
+    #abs_delta_voltage = 6 if freq_initial < 9.5 else 4 
+    abs_delta_voltage = 4
+
     abs_freq_dif_old = abs(desired_frequency-freq_initial)
     avg_dc_link_voltage = float(average_executed_command(2, "driver_read_Dri_DC_voltage", None , WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES))/10
 
     if desired_frequency > freq_initial:
         aimed_dc_link_voltage = avg_dc_link_voltage - abs_delta_voltage
         execute_command("driver_set_ref_voltage", int(aimed_dc_link_voltage*10), WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, should_raise_error)
-        time.sleep(5)
+        time.sleep(7.5)
 
         freq_new = float(average_executed_command(1, "driver_read_Dri_Frequency", None , WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES))/100
         abs_freq_dif_new = abs(desired_frequency-freq_new)
@@ -51,7 +52,7 @@ def drive_motor_at_frequency(desired_frequency):
     else:
         aimed_dc_link_voltage = avg_dc_link_voltage + abs_delta_voltage
         execute_command("driver_set_ref_voltage", int(aimed_dc_link_voltage*10), WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, should_raise_error)
-        time.sleep(5)              
+        time.sleep(7.5)              
         
         freq_new = float(average_executed_command(1, "driver_read_Dri_Frequency", None , WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES))/100
         abs_freq_dif_new = abs(desired_frequency-freq_new)

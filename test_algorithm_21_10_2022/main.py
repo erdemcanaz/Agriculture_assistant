@@ -5,7 +5,7 @@ import driver
 
 import serial_module
 
-NUMBER_OF_MAX_RETRIES = 5
+NUMBER_OF_MAX_RETRIES = 10
 WAIT_RESPONSE_SECONDS = 2
 
 Dri_Frequency_Ref = 0
@@ -27,7 +27,7 @@ def setup_block():
         execute_command("inverter_read_Inv_BESS_Voltage", None , WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, True)
 
         execute_command("driver_stop", None, WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, True)
-        time.sleep(10)
+        time.sleep(5)
         execute_command("driver_enable_PV_mode", None, WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, True)  
         execute_command("driver_enable_voltage_reference_control_mode", None, WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, True)
         execute_command("driver_enable_pv_input", None, WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES, True)    
@@ -57,6 +57,9 @@ def measurement_block(start_time_time_seconds, min_duration_seconds):
         global Inv_BESS_Voltage
         global Inv_BESS_Current
 
+        global Inv_BESS_Current_Ref
+        global Dri_Frequency_Ref
+
         NUMBER_OF_DATA_POINTS = 1
         
         Dri_DC_voltage = float(average_executed_command(NUMBER_OF_DATA_POINTS, "driver_read_Dri_DC_voltage", None , WAIT_RESPONSE_SECONDS, NUMBER_OF_MAX_RETRIES))/10
@@ -78,6 +81,8 @@ def measurement_block(start_time_time_seconds, min_duration_seconds):
         print( "Inv_BESS_Power: " + str(Inv_BESS_Power) + "W")
         print( "Inv_BESS_Voltage: " + str(Inv_BESS_Voltage) + "V")
         print( "Inv_BESS_Current: " + str(Inv_BESS_Current) + "A")
+        print( "Inv_BESS_Current_Ref: " + str(Inv_BESS_Current_Ref) + "A")
+        print( "Driver_Frequency_Ref: " + str(Dri_Frequency_Ref) + "Hz")
 
         while True:
                 if time.time()-start_time_time_seconds > min_duration_seconds:
@@ -93,7 +98,7 @@ def algorithm_block_1():
         global Dri_Power
         global Inv_BESS_Voltage
     
-        DEFINED_ALGORITHM_PERIOD_SECONDS = 600 
+        DEFINED_ALGORITHM_PERIOD_SECONDS = 180
         
         if PREVIOUS_ALGORITHM_ENTER_TIME == None or time.time()-PREVIOUS_ALGORITHM_ENTER_TIME > DEFINED_ALGORITHM_PERIOD_SECONDS:
                 PREVIOUS_ALGORITHM_ENTER_TIME = time.time()
@@ -159,6 +164,7 @@ def BESS_block():
 #===================================================================================================
 
 setup_block()
+
 while True: 
         measurement_block(time.time(), 15)       
        
