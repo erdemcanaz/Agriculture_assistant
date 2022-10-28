@@ -98,38 +98,56 @@ def algorithm_block_1():
         if PREVIOUS_ALGORITHM_ENTER_TIME == None or time.time()-PREVIOUS_ALGORITHM_ENTER_TIME > DEFINED_ALGORITHM_PERIOD_SECONDS:
                 PREVIOUS_ALGORITHM_ENTER_TIME = time.time()
                 #below code exucutes every 10 minutes
+                Algorithm_Check = True
                 if Inv_BESS_Power > 100:  
                         if(Dri_Frequency == 0 and (0.7 * Inv_BESS_Power) >1250):
                                 if (0.7*Inv_BESS_Power)  <2200:
-                                        Inv_BESS_Current_Ref = (0.3 * Inv_BESS_Power)/Inv_BESS_Voltage
+                                        Inv_BESS_Current_Ref =  (0.3 * Inv_BESS_Power)/Inv_BESS_Voltage
                                 else:
                                         Inv_BESS_Current_Ref = (Inv_BESS_Power - 2200)/Inv_BESS_Voltage
 
-                
                                 Dri_Frequency_Ref = 50
                         
-                        elif(Dri_Frequency>10 and Dri_Frequency <50):
+                        elif(Dri_Frequency>10 and Dri_Frequency <49.7):
                                 if 0.7*(Inv_BESS_Power+ Dri_Power)  <2200:
                                         Inv_BESS_Current_Ref = 0.3* (Inv_BESS_Power + Dri_Power) / Inv_BESS_Voltage
 
                                 else:
                                         Inv_BESS_Current_Ref = (Inv_BESS_Power + Dri_Power - 2200)/Inv_BESS_Voltage
                                 
-                        
                 elif(Inv_BESS_Power> -100 and Inv_BESS_Power < 100):
                         Dri_Frequency_Ref = 50
+                
+                return True
+        
+        else:
+                return False
 
-                elif(Inv_BESS_Power < -100):
+
+def algorithm_block_2():
+        global Dri_Frequency
+        global Inv_BESS_Current
+        global Inv_BESS_Current_Ref
+
+        if(Dri_Frequency > 49.7 or Dri_Frequency == 0):
+                if(abs(Inv_BESS_Current - Inv_BESS_Current_Ref) < 1):
+                        Inv_BESS_Current_Ref= min( Inv_BESS_Current_Ref +2 , 50)
+
+def algorithm_block_3():
+        global Dri_Frequency_Ref
+        global Inv_BESS_Power
+        global Inv_BESS_Current_Ref
+
+        if Inv_BESS_Power < 100:
+                Inv_BESS_Current_Ref = 5
+                if Inv_BESS_Power < -100:
                         Dri_Frequency_Ref = 0
 
 
 
-
-
-                
-
-
 def driver_block(frequency):
+        if( frequency < 0 or frequency > 50):
+                frequency = 0
         driver.drive_motor_at_frequency(frequency)
 
 def BESS_block():
@@ -141,12 +159,17 @@ def BESS_block():
 #===================================================================================================
 
 setup_block()
-while True:
- 
+while True: 
         measurement_block(time.time(), 15)       
-        
+       
+
+        if ( algorithm_block_1() == True):continue
+
+        algorithm_block_2()
+        algorithm_block_3()        
+
         BESS_block()
-        driver_block(0)
+        driver_block(Dri_Frequency_Ref)
         
         pass
 
