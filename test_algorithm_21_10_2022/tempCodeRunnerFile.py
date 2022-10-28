@@ -1,1 +1,2 @@
-sudo chmod a+rw /dev/ttyACM3
+
+write_commands = {    

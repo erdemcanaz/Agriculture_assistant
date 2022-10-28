@@ -71,13 +71,14 @@ def execute_command(command=None, value=None, wait_response_seconds=1, number_of
                     raise Exception(
                         f"execute_command: value should be positive integer, but value={value}")
 
-                sig_byte = value >> 8
-                lst_byte = value & 0xFF
-
+                sig_byte =  value >> 8
+                lst_byte =  value & 0xFF
+                
                 command_to_execute = command_to_execute.replace("<sig_byte>", str(sig_byte))
                 command_to_execute = command_to_execute.replace(
                     "<lst_byte>", str(lst_byte))
-            
+            elif value != None:
+                raise Exception("Value should be integer")
             response = write_to_port_and_get_response(command_to_execute, wait_response_seconds)
 
             #save response to latest_replies
