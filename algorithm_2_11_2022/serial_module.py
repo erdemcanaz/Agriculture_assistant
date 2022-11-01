@@ -47,6 +47,7 @@ def __keep_port_alive():
 def __kill_port():
     global SERIAL_OBJECT
     global ARDUINO_BOOT_TIME_SECONDS
+    
     if(SERIAL_OBJECT != None):
         if(SERIAL_OBJECT.is_open):
             SERIAL_OBJECT.close()
