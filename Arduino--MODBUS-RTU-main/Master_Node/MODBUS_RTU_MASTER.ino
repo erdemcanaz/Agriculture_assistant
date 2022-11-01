@@ -151,7 +151,8 @@ void master_write_and_read()
         //Serial.println(B[bytes_to_read[i]-1]);
         if (bytes_to_read[i] != 5){
           //Serial.println("Value: ");
-          Serial.println(B[bytes_to_read[i]-4]*255+B[bytes_to_read[i]-3]);
+          
+          Serial.println((uint16_t)(B[bytes_to_read[i]-4]*255+B[bytes_to_read[i]-3]));
         }
         return;
       }
