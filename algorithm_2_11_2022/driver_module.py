@@ -6,7 +6,7 @@ def calculate_motor_power_watts_by_frequency(frequency):
     return (27.84392-4.6395*frequency+0.915*pow(frequency,2))
 
 def drive_motor_at_frequency(desired_frequency):
-    DC_LINK_STEP_VOLTS = 0.001
+    DC_LINK_STEP_VOLTS = 4
     TRANSIENT_TIME_SECONDS = 7.5
     RECOVERY_TIME_SECONDS = 10
 
