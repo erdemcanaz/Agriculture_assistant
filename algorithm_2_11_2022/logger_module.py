@@ -1,13 +1,13 @@
 from pathlib import Path
+import datetime
 
-
-def append_to_txt_file(file_name, data):
+def append_to_txt_file(file_name, data, append_datetime_to_data=True):
     this_file_parent_path = Path(__file__).parent
     log_folder_path = this_file_parent_path / "log_files"
 
     txt_file_path_str = str(log_folder_path)+"/"+str(file_name)+".txt"
 
     with open(txt_file_path_str, 'a') as f:
-        f.write(data)
+        f.write(str( datetime.datetime.now() )+ ":"+ data)
 
 

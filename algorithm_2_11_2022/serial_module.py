@@ -2,7 +2,7 @@ import time
 import serial
 from serial.tools import list_ports
 
-from logger import append_to_txt_file
+from logger_module import append_to_txt_file
 
 SERIAL_OBJECT = None
 ARDUINO_BOOT_TIME_SECONDS = 5
@@ -21,7 +21,7 @@ def __keep_port_alive():
 
     # Check if are there any available ports
     if (len(ports_str_list) == 0):
-        error_str = f"{time.localtime()}: __keep_port_alive() : No serial ports are available\n"
+        error_str = f"__keep_port_alive() : No serial ports are available\n"
         append_to_txt_file("error_log", error_str)
         raise Exception(error_str)
 
@@ -98,11 +98,11 @@ def write_to_port_and_get_response(str_data_to_write="\n", wait_response_seconds
                 if (not is_empty_response_accepted):
                     retry_counter+= 1
                     if(retry_counter > number_of_retries_on_empty_response):
-                        error_str = f"{time.localtime()}: write_to_port_and_get_response() : Empty response received for the request \"{str_data_to_write}\" for {retry_counter}. time, killing the port\n"
+                        error_str = f"write_to_port_and_get_response() : Empty response received for the request \"{str_data_to_write}\" for {retry_counter}. time, killing the port\n"
                         append_to_txt_file("error_log", error_str)
                         print(error_str)
                         __kill_port()
-                    error_str = f"{time.localtime()}: write_to_port_and_get_response() : Empty response received {retry_counter}/{number_of_retries_on_empty_response}, Data sent was \"{str_data_to_write}\".Retrying\n"
+                    error_str = f"write_to_port_and_get_response() : Empty response received {retry_counter}/{number_of_retries_on_empty_response}, Data sent was \"{str_data_to_write}\".Retrying\n"
                     append_to_txt_file("error_log", error_str)
                     print(error_str)
                     continue
@@ -111,16 +111,15 @@ def write_to_port_and_get_response(str_data_to_write="\n", wait_response_seconds
             return (buffer_str)
         except Exception as e:
             # if an error occurs, kill port and try again
-            # TODO: keep log of errors
-            error_str = f"{time.localtime()}: write_to_port_and_get_response() : Exception occured:{e}, killing the port and retrying\n"
+            error_str = f"write_to_port_and_get_response() : Exception occured:{e}, killing the port and retrying\n"
             append_to_txt_file("error_log", error_str)
             print(error_str)
             __kill_port()
            
 
     __kill_port()
-    raise Exception(f"{time.localtime()} write_to_port_and_get_response:" + "Serial connection timeout")
+    raise Exception(f"write_to_port_and_get_response:" + "Serial connection timeout")
 
-while True:
-    rslt = write_to_port_and_get_response()
-    print(rslt)
+# while True:
+#     rslt = write_to_port_and_get_response()
+#     print(rslt)
