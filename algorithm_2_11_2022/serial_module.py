@@ -22,7 +22,7 @@ def __keep_port_alive():
     # Check if are there any available ports
     if (len(ports_str_list) == 0):
         error_str = f"__keep_port_alive() : No serial ports are available\n"
-        append_to_txt_file("error_log", error_str)
+        append_to_txt_file("error_log", error_str, True)
         raise Exception(error_str)
 
     # Check if current port is in the list of available ports
@@ -99,11 +99,11 @@ def write_to_port_and_get_response(str_data_to_write="\n", wait_response_seconds
                     retry_counter+= 1
                     if(retry_counter > number_of_retries_on_empty_response):
                         error_str = f"write_to_port_and_get_response() : Empty response received for the request \"{str_data_to_write}\" for {retry_counter}. time, killing the port\n"
-                        append_to_txt_file("error_log", error_str)
+                        append_to_txt_file("error_log", error_str, True)
                         print(error_str)
                         __kill_port()
                     error_str = f"write_to_port_and_get_response() : Empty response received {retry_counter}/{number_of_retries_on_empty_response}, Data sent was \"{str_data_to_write}\".Retrying\n"
-                    append_to_txt_file("error_log", error_str)
+                    append_to_txt_file("error_log", error_str, True)
                     print(error_str)
                     continue
 
@@ -112,7 +112,7 @@ def write_to_port_and_get_response(str_data_to_write="\n", wait_response_seconds
         except Exception as e:
             # if an error occurs, kill port and try again
             error_str = f"write_to_port_and_get_response() : Exception occured:{e}, killing the port and retrying\n"
-            append_to_txt_file("error_log", error_str)
+            append_to_txt_file("error_log", error_str,True)
             print(error_str)
             __kill_port()
            

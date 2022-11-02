@@ -8,6 +8,10 @@ def append_to_txt_file(file_name, data, append_datetime_to_data=True):
     txt_file_path_str = str(log_folder_path)+"/"+str(file_name)+".txt"
 
     with open(txt_file_path_str, 'a') as f:
-        f.write(str( datetime.datetime.now() )+ ":"+ data)
+        if(append_datetime_to_data):
+            data = str(datetime.datetime.now())+" "+str(data)
+        else:
+            data = str(data)
+        f.write(data)
 
 

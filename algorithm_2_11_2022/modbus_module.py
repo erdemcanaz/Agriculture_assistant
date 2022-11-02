@@ -1,9 +1,5 @@
 from serial_module import write_to_port_and_get_response
 
-IS_PRINT_COMMAND_EXECUTED = True
-IS_PRINT_VALUE = False
-IS_PRINT_RESPONSE = True
-
 write_commands = {    
     #driver related commands
     "driver_enable_PV_mode":"15,6,15,0,0,1\n",
@@ -78,5 +74,5 @@ def average_executed_command(command_key=None, value=None, number_of_averaging =
 
 
 # execute_command("driver_read_ref_dc_voltage")
-# rslt = average_executed_command("driver_read_ref_dc_voltage", number_of_averaging = 10, value = None, wait_response_seconds=1, is_empty_response_accepted=False, number_of_retries_on_empty_response = 3, timeout_seconds=30)
-# print(rslt)
+rslt = average_executed_command("driver_read_ref_dc_voltage", value = None, number_of_averaging = 10)
+print(rslt)
