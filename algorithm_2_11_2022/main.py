@@ -21,7 +21,7 @@ Inv_BESS_Current = None
 
 def setup_block():
         global Inv_BESS_Current_Ref
-        append_to_txt_file("algorithm_steps", "EXECUTING SETUP BLOCK", append_datetime_to_data=True)
+        append_to_txt_file("algorithm_steps", "\nEXECUTING SETUP BLOCK", append_datetime_to_data=True)
         
         execute_command("inverter_read_Inv_BESS_Voltage")
         execute_command("driver_stop")
@@ -77,7 +77,7 @@ def setup_block():
         append_to_txt_file("algorithm_steps", f"Inverter maximum BESS charging current is set to {Inv_BESS_Current_Ref}A", append_datetime_to_data=True)
         
 def measurement_block(start_time_time_seconds, min_duration_seconds):
-        append_to_txt_file("algorithm_steps", "EXECUTING MEASUREMENT BLOCK", append_datetime_to_data=True)
+        append_to_txt_file("algorithm_steps", "\nEXECUTING MEASUREMENT BLOCK", append_datetime_to_data=True)
         global Dri_DC_voltage
         global Dri_Frequency
         global Dri_Power
@@ -136,7 +136,7 @@ def measurement_block(start_time_time_seconds, min_duration_seconds):
 
 PREVIOUS_ALGORITHM_ENTER_TIME = None
 def algorithm_block_1():
-        append_to_txt_file("algorithm_steps", "EXECUTING BLOCK 1", append_datetime_to_data=True)
+        append_to_txt_file("algorithm_steps", "\nEXECUTING BLOCK 1", append_datetime_to_data=True)
         global PREVIOUS_ALGORITHM_ENTER_TIME
         global Dri_Frequency_Ref
         global Inv_BESS_Current_Ref
@@ -188,7 +188,7 @@ def algorithm_block_1():
 
 
 def algorithm_block_2():
-        append_to_txt_file("algorithm_steps", "EXECUTING BLOCK 2", append_datetime_to_data=True)
+        append_to_txt_file("algorithm_steps", "\nEXECUTING BLOCK 2", append_datetime_to_data=True)
         global Dri_Frequency
         global Inv_BESS_Current
         global Inv_BESS_Current_Ref
@@ -202,7 +202,7 @@ def algorithm_block_2():
 
 
 def algorithm_block_3():
-        append_to_txt_file("algorithm_steps", "EXECUTING BLOCK 3", append_datetime_to_data=True)
+        append_to_txt_file("algorithm_steps", "\nEXECUTING BLOCK 3", append_datetime_to_data=True)
         global Dri_Frequency
         global Dri_Frequency_Ref
         global Inv_BESS_Current
@@ -218,7 +218,7 @@ def algorithm_block_3():
 
 
 def algorithm_block_4():
-        append_to_txt_file("algorithm_steps", "EXECUTING BLOCK 4", append_datetime_to_data=True)
+        append_to_txt_file("algorithm_steps", "\nEXECUTING BLOCK 4", append_datetime_to_data=True)
         global Dri_Frequency_Ref
         global Inv_BESS_Power
         global Inv_BESS_Current_Ref
@@ -233,14 +233,14 @@ def algorithm_block_4():
 
 
 def driver_block(frequency):
-        append_to_txt_file("algorithm_steps", "EXECUTING DRIVER BLOCK", append_datetime_to_data=True)
+        append_to_txt_file("algorithm_steps", "\nEXECUTING DRIVER BLOCK", append_datetime_to_data=True)
         if( frequency < 0 or frequency > 50):
                 frequency = 0
         driver_module.drive_motor_at_frequency(frequency)
         append_to_txt_file("algorithm_steps", f"Driver tries to reach {frequency} Hz", append_datetime_to_data=True)
 
 def BESS_block():
-        append_to_txt_file("algorithm_steps", "EXECUTING BESS BLOCK", append_datetime_to_data=True)
+        append_to_txt_file("algorithm_steps", "\nEXECUTING BESS BLOCK", append_datetime_to_data=True)
         global Inv_BESS_Current_Ref
         Inv_BESS_Current_Ref = min(Inv_BESS_Current_Ref, 50)
         Inv_BESS_Current_Ref = max(Inv_BESS_Current_Ref, 5)
