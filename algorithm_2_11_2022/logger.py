@@ -11,5 +11,3 @@ def append_to_txt_file(file_name, data):
         f.write(data)
 
 
-
-
