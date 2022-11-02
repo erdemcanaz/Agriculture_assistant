@@ -1,4 +1,5 @@
 from serial_module import write_to_port_and_get_response
+from logger_module import  append_to_txt_file
 
 write_commands = {    
     #driver related commands
@@ -41,6 +42,7 @@ read_commands = {
 
 def execute_command(command_key=None, value=None, wait_response_seconds=1, is_empty_response_accepted=False, number_of_retries_on_empty_response = 3, timeout_seconds=30):
     command_to_execute = None
+    
 
     if command_key in write_commands:
         command_to_execute = write_commands[command_key]
@@ -60,6 +62,8 @@ def execute_command(command_key=None, value=None, wait_response_seconds=1, is_em
         raise Exception("command not found")
 
     response = write_to_port_and_get_response(str_data_to_write=command_to_execute, wait_response_seconds=wait_response_seconds, is_empty_response_accepted=is_empty_response_accepted, number_of_retries_on_empty_response = number_of_retries_on_empty_response, timeout_seconds=timeout_seconds)
+    data = "command_key: "+str(command_key) +" command_to_execute: "+ str(command_to_execute)+ " value: " + str(value)+ " response: " + str(response)
+    append_to_txt_file("executed_commands", data, append_datetime_to_data=True)
     return response
 
 def average_executed_command(command_key=None, value=None, number_of_averaging = 1,  wait_response_seconds=1, is_empty_response_accepted=False, number_of_retries_on_empty_response = 3, timeout_seconds=30):
@@ -74,5 +78,6 @@ def average_executed_command(command_key=None, value=None, number_of_averaging =
 
 
 # execute_command("driver_read_ref_dc_voltage")
-rslt = average_executed_command("driver_read_ref_dc_voltage", value = None, number_of_averaging = 10)
-print(rslt)
+# rslt = average_executed_command("driver_read_ref_dc_voltage", value = None, number_of_averaging = 10)
+# print(rslt)
+

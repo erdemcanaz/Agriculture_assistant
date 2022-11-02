@@ -1,7 +1,7 @@
 from pathlib import Path
 import datetime
 
-def append_to_txt_file(file_name, data, append_datetime_to_data=True):
+def append_to_txt_file(file_name, data, append_datetime_to_data=True, add_new_line = True):
     this_file_parent_path = Path(__file__).parent
     log_folder_path = this_file_parent_path / "log_files"
 
@@ -12,6 +12,8 @@ def append_to_txt_file(file_name, data, append_datetime_to_data=True):
             data = str(datetime.datetime.now())+" "+str(data)
         else:
             data = str(data)
+        if(add_new_line):
+            data = data + "\n"
         f.write(data)
 
 
