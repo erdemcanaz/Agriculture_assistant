@@ -10,7 +10,7 @@ void loop() {
       delay(10);
     } 
     long random_number =random(50);
-    long error_rate =random(5);
+    long error_rate =random(2);
     if(error_rate !=0){
       Serial.println(random_number);
     }
