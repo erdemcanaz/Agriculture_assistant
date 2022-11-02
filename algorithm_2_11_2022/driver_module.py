@@ -6,7 +6,7 @@ def calculate_motor_power_watts_by_frequency(frequency):
     return (27.84392-4.6395*frequency+0.915*pow(frequency,2))
 
 def drive_motor_at_frequency(desired_frequency):
-    DC_LINK_STEP_VOLTS = 4
+    DC_LINK_STEP_VOLTS = 0.001
     TRANSIENT_TIME_SECONDS = 7.5
     RECOVERY_TIME_SECONDS = 10
 
@@ -27,7 +27,7 @@ def drive_motor_at_frequency(desired_frequency):
 
     abs_freq_dif_old = abs(desired_frequency-freq_initial)
     avg_dc_link_voltage = float(average_executed_command("driver_read_Dri_DC_voltage", number_of_averaging = 1, value = None))/10
-
+    
     aimed_dc_link_voltage = avg_dc_link_voltage + delta_dc_link_voltage
     execute_command(command_key="driver_set_ref_voltage", value= 10*(aimed_dc_link_voltage+delta_dc_link_voltage))
     time.sleep(TRANSIENT_TIME_SECONDS)
@@ -44,7 +44,7 @@ def drive_motor_at_frequency(desired_frequency):
     if(abs_freq_dif_new<abs_freq_dif_old):
             print(f"Right- desired frequency was higher than the frequency now. So I decreased the ref voltage to {aimed_dc_link_voltage}V")
     else:
-            print(f"Wrong- desired frequency was higher than the frequency now. So I decreased the ref voltage. However this resulted in greater frequency diff. So I canceled the changes and increased the ref voltage to {aimed_dc_link_voltage+2*abs_delta_voltage}V ")
+            print(f"Wrong- desired frequency was higher than the frequency now. So I decreased the ref voltage. However this resulted in greater frequency diff. So I canceled the changes and increased the ref voltage to {aimed_dc_link_voltage+2*delta_dc_link_voltage}V ")
             execute_command(command_key="driver_set_ref_voltage", value= 10*(aimed_dc_link_voltage-2*delta_dc_link_voltage))
             time.sleep(RECOVERY_TIME_SECONDS)
 

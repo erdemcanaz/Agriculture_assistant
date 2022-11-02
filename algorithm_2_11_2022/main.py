@@ -151,9 +151,13 @@ def algorithm_block_1():
                 print("TIME LEFT: 0 seconds")
         else:
                 print("TIME LEFT: " + str(DEFINED_ALGORITHM_PERIOD_SECONDS - (time.time() - PREVIOUS_ALGORITHM_ENTER_TIME))+ " seconds")
+                append_to_txt_file("algorithm_steps", f"{DEFINED_ALGORITHM_PERIOD_SECONDS - (time.time() - PREVIOUS_ALGORITHM_ENTER_TIME)} seconds until next check", append_datetime_to_data= True)
+
 
 
         if PREVIOUS_ALGORITHM_ENTER_TIME == None or time.time()-PREVIOUS_ALGORITHM_ENTER_TIME > DEFINED_ALGORITHM_PERIOD_SECONDS:
+                append_to_txt_file("algorithm_steps", f"Checking +/+/+/+/+/+", append_datetime_to_data= True)
+                append_to_txt_file("algorithm_steps", f"Before algorithm -> Dri_Frequency_Ref:{Dri_Frequency_Ref}, Inv_BESS_Current_Ref:{Inv_BESS_Current_Ref}, Inv_BESS_Power:{Inv_BESS_Power}, Dri_Frequency:{Dri_Frequency}, Dri_Power:{Dri_Power}, Inv_BESS_Voltage:{Inv_BESS_Voltage}", append_datetime_to_data= True)
                 PREVIOUS_ALGORITHM_ENTER_TIME = time.time()
                 #below code exucutes every 10 minutes
                 if Inv_BESS_Power > 100:  
@@ -174,10 +178,12 @@ def algorithm_block_1():
                                 
                 elif(Inv_BESS_Power> -100 and Inv_BESS_Power < 100):
                         Dri_Frequency_Ref = 50
-                
+     
+                append_to_txt_file("algorithm_steps", f"After algorithm -> Dri_Frequency_Ref:{Dri_Frequency_Ref}, Inv_BESS_Current_Ref:{Inv_BESS_Current_Ref}, Inv_BESS_Power:{Inv_BESS_Power}, Dri_Frequency:{Dri_Frequency}, Dri_Power:{Dri_Power}, Inv_BESS_Voltage:{Inv_BESS_Voltage}", append_datetime_to_data= True)
                 return True
         
         else:
+                append_to_txt_file("algorithm_steps", f"After algorithm -> Dri_Frequency_Ref:{Dri_Frequency_Ref}, Inv_BESS_Current_Ref:{Inv_BESS_Current_Ref}, Inv_BESS_Power:{Inv_BESS_Power}, Dri_Frequency:{Dri_Frequency}, Dri_Power:{Dri_Power}, Inv_BESS_Voltage:{Inv_BESS_Voltage}", append_datetime_to_data= True)
                 return False
 
 
@@ -187,9 +193,11 @@ def algorithm_block_2():
         global Inv_BESS_Current
         global Inv_BESS_Current_Ref
 
+        append_to_txt_file("algorithm_steps", f"Before algorithm -> Dri_Frequency: {Dri_Frequency}, Inv_BESS_Current_Ref:{Inv_BESS_Current_Ref}, Inv_BESS_Current:{Inv_BESS_Current}", append_datetime_to_data= True)
         if(Dri_Frequency > 49.7):
                 if(abs(Inv_BESS_Current - Inv_BESS_Current_Ref) < 2):
                         Inv_BESS_Current_Ref= min( Inv_BESS_Current_Ref +2 , 50)
+        append_to_txt_file("algorithm_steps", f"After algorithm -> Dri_Frequency: {Dri_Frequency}, Inv_BESS_Current_Ref:{Inv_BESS_Current_Ref}, Inv_BESS_Current:{Inv_BESS_Current}", append_datetime_to_data= True)
 
 
 
@@ -200,11 +208,13 @@ def algorithm_block_3():
         global Inv_BESS_Current
         global Inv_BESS_Current_Ref
 
+        append_to_txt_file("algorithm_steps", f"Before algorithm -> Inv_BESS_Current_Ref: {Inv_BESS_Current_Ref} , Inv_BESS_Current: {Inv_BESS_Current} Dri_Frequency: {Dri_Frequency} Dri_Frequency_Ref:{Dri_Frequency_Ref}", append_datetime_to_data= True)
         if(Dri_Frequency == 0):
                 Dri_Frequency_Ref = 0
                 if(abs(Inv_BESS_Current - Inv_BESS_Current_Ref) < 2):
                         Inv_BESS_Current_Ref= min( Inv_BESS_Current_Ref +2 , 50)
-                        
+        append_to_txt_file("algorithm_steps", f"After algorithm -> Inv_BESS_Current_Ref: {Inv_BESS_Current_Ref} , Inv_BESS_Current: {Inv_BESS_Current} Dri_Frequency: {Dri_Frequency} Dri_Frequency_Ref:{Dri_Frequency_Ref}", append_datetime_to_data= True)
+                
 
 
 def algorithm_block_4():
@@ -213,10 +223,13 @@ def algorithm_block_4():
         global Inv_BESS_Power
         global Inv_BESS_Current_Ref
 
+        append_to_txt_file("algorithm_steps", f"Before algorithm -> Inv_BESS_Power: {Inv_BESS_Power}, Inv_BESS_Current_Ref: {Inv_BESS_Current_Ref} A, Dri_Frequency_Ref: {Dri_Frequency_Ref}", append_datetime_to_data=True)
         if Inv_BESS_Power < 100:
                 Inv_BESS_Current_Ref = 5
                 if Inv_BESS_Power < -100:
                         Dri_Frequency_Ref = 0
+
+        append_to_txt_file("algorithm_steps", f"After algorithm -> Inv_BESS_Power: {Inv_BESS_Power}, Inv_BESS_Current_Ref: {Inv_BESS_Current_Ref} A, Dri_Frequency_Ref: {Dri_Frequency_Ref}", append_datetime_to_data=True)
 
 
 def driver_block(frequency):
@@ -224,6 +237,7 @@ def driver_block(frequency):
         if( frequency < 0 or frequency > 50):
                 frequency = 0
         driver_module.drive_motor_at_frequency(frequency)
+        append_to_txt_file("algorithm_steps", f"Driver tries to reach {frequency} Hz", append_datetime_to_data=True)
 
 def BESS_block():
         append_to_txt_file("algorithm_steps", "EXECUTING BESS BLOCK", append_datetime_to_data=True)
@@ -231,6 +245,7 @@ def BESS_block():
         Inv_BESS_Current_Ref = min(Inv_BESS_Current_Ref, 50)
         Inv_BESS_Current_Ref = max(Inv_BESS_Current_Ref, 5)
         execute_command(command_key = "inverter_set_Inv_BESS_Current_Ref", value = Inv_BESS_Current_Ref)
+        append_to_txt_file("algorithm_steps", f"BESS max charging current is set to {Inv_BESS_Current_Ref}", append_datetime_to_data=True)
 
 
 #===================================================================================================
