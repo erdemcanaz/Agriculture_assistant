@@ -40,7 +40,7 @@ read_commands = {
     "pv_read_holding_register": "16,03,<sig_byte>,<lst_byte>,00,01\n"
 }
 
-def execute_command(command_key=None, value=None, wait_response_seconds=1, is_empty_response_accepted=False, number_of_retries_on_empty_response = 3, timeout_seconds=30):
+def execute_command(command_key=None, value=None, wait_response_seconds=1, is_empty_response_accepted=False, number_of_retries_on_empty_response = 3, timeout_seconds=60):
     command_to_execute = None
     
 
@@ -54,7 +54,6 @@ def execute_command(command_key=None, value=None, wait_response_seconds=1, is_em
             lst_byte = value & 0xFF
             command_to_execute = command_to_execute.replace("<sig_byte>", str(sig_byte))
             command_to_execute = command_to_execute.replace("<lst_byte>", str(lst_byte))
-            write_to_port_and_get_response()
 
     elif command_key in read_commands:
         command_to_execute = read_commands[command_key]
@@ -66,7 +65,7 @@ def execute_command(command_key=None, value=None, wait_response_seconds=1, is_em
     append_to_txt_file("executed_commands", data, append_datetime_to_data=True)
     return response
 
-def average_executed_command(command_key=None, value=None, number_of_averaging = 1,  wait_response_seconds=1, is_empty_response_accepted=False, number_of_retries_on_empty_response = 3, timeout_seconds=30):
+def average_executed_command(command_key=None, value=None, number_of_averaging = 1,  wait_response_seconds=1, is_empty_response_accepted=False, number_of_retries_on_empty_response = 3, timeout_seconds=60):
     counter = 0
     sum_float = 0
     while counter < number_of_averaging:
